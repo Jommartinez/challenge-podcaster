@@ -1,0 +1,26 @@
+.search {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: end;
+  margin-top: 2rem;
+  padding-right: 2rem;
+}
+
+.input {
+  width: 100%;
+  max-width: 15rem;
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid #939393;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.badge {
+  padding: 0.1rem 0.5rem;
+  background-color: #224ed2;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}

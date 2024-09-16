@@ -1,0 +1,23 @@
+.wrapper-card {
+  padding: 3rem 2rem;
+  width: 100%;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  row-gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .wrapper-card {
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .wrapper-card {
+    grid-template-rows: repeat(6, 1fr);
+    grid-template-columns: repeat(6, 1fr);
+  }
+}

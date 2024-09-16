@@ -1,0 +1,30 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  align-items: center;
+}
+.image {
+  width: 50%;
+  height: auto;
+  border-radius: 100%;
+  aspect-ratio: 1/1;
+}
+.data {
+  z-index: -1;
+  margin-top: -5rem;
+  padding: 5rem 1rem 1rem;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+}
+.title {
+  text-transform: uppercase;
+  font-size: 1rem;
+}
+.author {
+  font-size: 0.85rem;
+  color: #939393;
+}
