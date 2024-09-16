@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { DetailLayout, MainLayout } from './layout'
-import { DetailPodcast, EpidoseDetail, Home } from './pages'
+import { DetailPodcast, EpisodeDetail, Home } from './pages'
 import { LoadingProvider } from './context'
 
 function App() {
@@ -9,9 +9,9 @@ function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route path="/:podcastId" element={<DetailLayout />}>
+          <Route path="podcast/:podcastId" element={<DetailLayout />}>
             <Route index element={<DetailPodcast />} />
-            <Route path="episode/:episodeId" element={<EpidoseDetail />} />
+            <Route path="episode/:episodeId" element={<EpisodeDetail />} />
           </Route>
         </Route>
       </Routes>

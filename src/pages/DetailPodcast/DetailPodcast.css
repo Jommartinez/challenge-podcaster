@@ -1,0 +1,18 @@
+.count {
+  padding: 1rem;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.wrapperDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.wrapperList {
+  padding: 1rem;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

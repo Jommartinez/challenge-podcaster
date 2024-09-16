@@ -1,0 +1,25 @@
+.row {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.5rem;
+}
+.row:nth-child(even) {
+  background-color: #efeded;
+}
+.w-75 {
+  width: 75%;
+}
+.w-15 {
+  width: 15%;
+}
+.w-10 {
+  width: 10%;
+}
+
+.last {
+  text-align: right;
+  padding-right: 1rem;
+}
+.link {
+  color: #224ed2;
+}

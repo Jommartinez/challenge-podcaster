@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './Header.css'
 
 interface HeaderProps {
@@ -7,7 +8,9 @@ interface HeaderProps {
 export const Header = ({ loading }: HeaderProps) => {
   return (
     <div className="header">
-      <h1>Podcaster</h1>
+      <Link to={'/'}>
+        <h1>Podcaster</h1>
+      </Link>
       <div>{loading && <div className="loader"></div>}</div>
     </div>
   )

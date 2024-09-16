@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { useLoading } from '../../context'
 import { getPodcasts } from '../../api'
 import { Podcast } from '../../types'
-import { CardPodcast } from '../../components/CardPodcast/CardPodcast'
+import { CardPodcast } from '../../components'
 
 import './Home.css'
-import { Search } from '../../components/Search/Search'
+import { Search } from '../../components'
 
 export const Home = () => {
   const { setIsLoading } = useLoading()

@@ -1,0 +1,11 @@
+.wrapperInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.w-100 {
+  width: 100%;
+}
