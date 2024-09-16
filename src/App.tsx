@@ -1,21 +1,19 @@
-import { useEffect } from 'react'
-import { getPodcasts } from './api'
+import { Route, Routes } from 'react-router-dom'
+import { DetailLayout, MainLayout } from './layout'
+import { DetailPodcast, EpidoseDetail, Home } from './pages'
 
 function App() {
-  const getDataPodcast = async () => {
-    try {
-      const data = await getPodcasts()
-      console.log(data)
-    } catch (error) {
-      console.log('Error fetching podcasts:', error)
-    }
-  }
-
-  useEffect(() => {
-    getDataPodcast()
-  }, [])
-
-  return <p>App</p>
+  return (
+    <Routes>
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<Home />} />
+        <Route path="/:podcastId" element={<DetailLayout />}>
+          <Route index element={<DetailPodcast />} />
+          <Route path="episode/:episodeId" element={<EpidoseDetail />} />
+        </Route>
+      </Route>
+    </Routes>
+  )
 }
 
 export default App
