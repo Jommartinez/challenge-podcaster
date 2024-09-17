@@ -11,7 +11,7 @@ export const Header = ({ loading }: HeaderProps) => {
       <Link to={'/'}>
         <h1>Podcaster</h1>
       </Link>
-      <div>{loading && <div className="loader"></div>}</div>
+      <div>{loading && <div className="loader" role="status"></div>}</div>
     </div>
   )
 }

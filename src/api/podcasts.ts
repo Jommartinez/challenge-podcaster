@@ -2,25 +2,41 @@ import type { Podcast } from '../types'
 import { isExpired, mappedPodcasts } from '../utils'
 import { api } from './'
 
+const cachePodcasts = (podcasts: Podcast[]) => {
+  const cacheData = {
+    timestamp: Date.now(),
+    podcasts,
+  }
+  localStorage.setItem('podcastsCache', JSON.stringify(cacheData))
+}
+
+const getCachedPodcasts = () => {
+  const cached = localStorage.getItem('podcastsCache')
+  if (!cached) return null
+
+  const { timestamp, podcasts } = JSON.parse(cached)
+
+  if (isExpired(timestamp)) {
+    localStorage.removeItem('podcastsCache')
+    return null
+  }
+
+  return podcasts
+}
+
 export const getPodcasts = async () => {
   try {
-    const storedPodcasts = localStorage.getItem('podcastsList')
-    const storedPodcastsDate = localStorage.getItem('podcastsDate')
+    const cachedPodcasts = getCachedPodcasts()
 
-    if (
-      storedPodcasts &&
-      storedPodcastsDate &&
-      !isExpired(Number(storedPodcastsDate))
-    ) {
-      return JSON.parse(storedPodcasts)
+    if (cachedPodcasts) {
+      return cachedPodcasts
     }
 
     const resp = await api('/us/rss/toppodcasts/limit=100/genre=1310/json')
     const data = await JSON.parse(resp.contents)
     const listPodcasts: Podcast[] = data.feed.entry.map(mappedPodcasts)
 
-    localStorage.setItem('podcastsList', JSON.stringify(listPodcasts))
-    localStorage.setItem('podcastsDate', String(Date.now()))
+    cachePodcasts(listPodcasts)
 
     return listPodcasts
   } catch (error) {
