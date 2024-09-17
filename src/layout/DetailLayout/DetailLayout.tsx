@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { Podcast } from '../../types'
+import { isExpired } from '../../utils'
 
 import './DetailLayout.css'
 
@@ -10,20 +11,31 @@ export const DetailLayout = () => {
   const [podcast, setPodcast] = useState<Podcast | null>(null)
 
   useEffect(() => {
-    const storedPodcasts = localStorage.getItem('podcastsList')
-    if (storedPodcasts) {
-      const listPodcasts: Podcast[] = JSON.parse(storedPodcasts)
-      const podcast = listPodcasts.find(
-        (podcast: Podcast) => podcast.id === podcastId,
-      )
-      if (podcast) {
-        setPodcast(podcast)
+    const cachedData = localStorage.getItem('podcastsCache')
+
+    if (cachedData) {
+      const {
+        timestamp,
+        podcasts,
+      }: { timestamp: number; podcasts: Podcast[] } = JSON.parse(cachedData)
+
+      if (!isExpired(timestamp)) {
+        const podcast = podcasts.find(
+          (podcast: Podcast) => podcast.id === podcastId,
+        )
+        if (podcast) {
+          setPodcast(podcast)
+        } else {
+          console.log('Podcast not found')
+          navigate('/')
+        }
       } else {
-        console.log('Podcast not found')
+        console.log('Cached data expired')
+        localStorage.removeItem('podcastsCache')
         navigate('/')
       }
     } else {
-      console.log('No local storage')
+      console.log('No cached podcasts data found')
       navigate('/')
     }
   }, [podcastId])

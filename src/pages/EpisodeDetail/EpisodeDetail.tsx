@@ -1,8 +1,10 @@
 import { useParams } from 'react-router-dom'
-import './EpisodeDetail.css'
 import { useEffect, useState } from 'react'
 import { Episode } from '../../types'
 import { useLoading } from '../../context'
+import { isExpired } from '../../utils'
+
+import './EpisodeDetail.css'
 
 export const EpisodeDetail = () => {
   const { setIsLoading } = useLoading()
@@ -14,18 +16,34 @@ export const EpisodeDetail = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    const storedEpisode = localStorage.getItem(`episode_${podcastId}`)
-    if (storedEpisode) {
-      const listEpisodes: Episode[] = JSON.parse(storedEpisode)
-      const episodeData = listEpisodes.find(
-        episode => episode.id === parseInt(episodeId || ''),
-      )
-      if (episodeData) {
-        setEpisode(episodeData)
+
+    const cachedData = localStorage.getItem(`episode_${podcastId}`)
+    if (cachedData) {
+      const {
+        timestamp,
+        episodes,
+      }: { timestamp: number; episodes: Episode[] } = JSON.parse(cachedData)
+
+      if (!isExpired(timestamp)) {
+        const episodeData = episodes.find(
+          episode => episode.id === parseInt(episodeId || ''),
+        )
+        if (episodeData) {
+          setEpisode(episodeData)
+        } else {
+          console.log('Episode not found')
+        }
+      } else {
+        console.log('Cached episode data expired')
+        localStorage.removeItem(`episode_${podcastId}`)
       }
+    } else {
+      console.log('No cached episodes found')
     }
+
     setIsLoading(false)
-  }, [episodeId, podcastId])
+  }, [episodeId, podcastId, setIsLoading])
+
   return (
     <div className="wrapperInfo">
       <h2>{episode?.name}</h2>
