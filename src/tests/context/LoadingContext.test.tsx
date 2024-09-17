@@ -37,18 +37,24 @@ describe('LoadingContext', () => {
     const consoleErrorSpy = vi
       .spyOn(console, 'error')
       .mockImplementation(() => {})
+
     const TestComponentOutsideProvider = () => {
       try {
         useLoading()
       } catch (e) {
-        return <span>{e.message}</span>
+        if (e instanceof Error) {
+          return <span>{e.message}</span>
+        }
+        return <span>Error desconocido</span>
       }
       return null
     }
+
     render(<TestComponentOutsideProvider />)
     expect(
       screen.getByText('useLoading must be used within a LoadingProvider'),
     ).toBeInTheDocument()
+
     consoleErrorSpy.mockRestore()
   })
 })

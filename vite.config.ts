@@ -11,4 +11,13 @@ export default defineConfig({
     setupFiles: './src/tests/setup.ts',
     environment: 'jsdom',
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://api.allorigins.win',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 })

@@ -33,7 +33,7 @@ export const getPodcasts = async () => {
     }
 
     const resp = await api('/us/rss/toppodcasts/limit=100/genre=1310/json')
-    const data = await JSON.parse(resp.contents)
+    const data = resp && (await JSON.parse(resp?.contents))
     const listPodcasts: Podcast[] = data.feed.entry.map(mappedPodcasts)
 
     cachePodcasts(listPodcasts)

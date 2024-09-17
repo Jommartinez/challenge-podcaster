@@ -35,7 +35,7 @@ export const getEpisodes = async (podcastId: number) => {
     const resp = await api(
       `/lookup?id=${podcastId}&media=podcast&entity=podcastEpisode&limit=20`,
     )
-    const data: EpisodeInterface = await JSON.parse(resp.contents)
+    const data: EpisodeInterface = resp && (await JSON.parse(resp?.contents))
     const listEpisodes: Episode[] = data.results.map(mappedEpisode)
 
     cacheEpisodes(podcastId, listEpisodes)
