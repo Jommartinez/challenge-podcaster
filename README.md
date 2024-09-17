@@ -8,7 +8,13 @@ Se trata de una aplicación para poder escuchar podcasts. La aplicación cuenta 
 
 La aplicación está diseñada como SPA por lo que la navegación se hace en todo momento desde el cliente.
 
-En la jerarquía de carpetas, se puede ver la carpeta `dist` donde tenemos la aplicación compilada y minificada y la carpeta `src` donde nos encontramos con el código fuente del desarrollo.
+En la vista principal hacemos uso del endpoint `https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json` además contamos con un filtro en tiempo real donde podemos filtrar tanto por nombre de podcast como nombre de autor.
+
+Para el detalle del podcast y episodios usamos el endpoint `https://itunes.apple.com/lookup?id=934552872&media=podcast &entity=podcastEpisode&limit=20` el cual nos permite mostrar la información necesaria
+
+Además para no tener problemas de CORS utilizamos el servicio `https://allorigins.win`
+
+En la jerarquía de carpetas, se puede ver la carpeta `dist` donde tenemos la aplicación compilada y minificada (no suelo subirla al repositorio, pero el challenge pedia la aplicación minificada) y la carpeta `src` donde nos encontramos con el código fuente del desarrollo.
 
 # Stack tecnológico
 
@@ -48,3 +54,7 @@ Para ejecutar y visualizar el modo compilado de la aplicación
 > $ npm run build
 > $ npm run preview
 > ```
+
+## Demo del challenge
+
+El proyecto ha sido desplegado en la siguiente url para fines de demostración : https://challenge-podcaster.vercel.app/
