@@ -2,7 +2,7 @@ import type { Episode, EpisodeInterface } from '../types'
 import { isExpired, mappedEpisode } from '../utils'
 import { api } from '.'
 
-const cacheEpisodes = (podcastId: number, episodes: Episode[]) => {
+export const cacheEpisodes = (podcastId: number, episodes: Episode[]) => {
   const cacheData = {
     timestamp: Date.now(),
     episodes,
@@ -10,7 +10,7 @@ const cacheEpisodes = (podcastId: number, episodes: Episode[]) => {
   localStorage.setItem(`episode_${podcastId}`, JSON.stringify(cacheData))
 }
 
-const getCachedEpisodes = (podcastId: number) => {
+export const getCachedEpisodes = (podcastId: number) => {
   const cached = localStorage.getItem(`episode_${podcastId}`)
   if (!cached) return null
 
