@@ -10,14 +10,6 @@ vi.mock('../../api', () => ({
 
 describe('podcastStore', () => {
   beforeEach(() => {
-    const {
-      podcasts,
-      episodes,
-      fetchPodcasts,
-      fetchEpisodes,
-      getPodcast,
-      getEpisodes,
-    } = usePodcastStore.getState()
     usePodcastStore.setState({ podcasts: [], episodes: {} })
     vi.clearAllMocks()
   })
