@@ -10,7 +10,7 @@ La aplicación está diseñada como SPA por lo que la navegación se hace en tod
 
 En la vista principal hacemos uso del endpoint `https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json` además contamos con un filtro en tiempo real donde podemos filtrar tanto por nombre de podcast como nombre de autor.
 
-Para el detalle del podcast y episodios usamos el endpoint `https://itunes.apple.com/lookup?id=934552872&media=podcast &entity=podcastEpisode&limit=20` el cual nos permite mostrar la información necesaria
+Para el detalle del podcast y episodios usamos el endpoint `https://itunes.apple.com/lookup?id=934552872&media=podcast&entity=podcastEpisode&limit=20` el cual nos permite mostrar la información necesaria
 
 Además para no tener problemas de CORS utilizamos el servicio `https://allorigins.win`
 
@@ -23,8 +23,7 @@ En la jerarquía de carpetas, se puede ver la carpeta `dist` donde tenemos la ap
 - Vite
 - Vitest
 - React testing library
-- Gestion de estado global con Contex
-- Almacenaje en cliente con local storage
+- Zustand con persist para el estado global
 
 ## Instrucciones de funcionamiento
 
