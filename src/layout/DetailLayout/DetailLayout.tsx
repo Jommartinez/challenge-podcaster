@@ -1,44 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
-import { Podcast } from '../../types'
-import { isExpired } from '../../utils'
+import usePodcastStore from '../../store/podcastStore'
 
 import './DetailLayout.css'
 
 export const DetailLayout = () => {
   const navigate = useNavigate()
   const { podcastId } = useParams<{ podcastId: string }>()
-  const [podcast, setPodcast] = useState<Podcast | null>(null)
+  const { getPodcast, fetchPodcasts } = usePodcastStore()
 
   useEffect(() => {
-    const cachedData = localStorage.getItem('podcastsCache')
-
-    if (cachedData) {
-      const {
-        timestamp,
-        podcasts,
-      }: { timestamp: number; podcasts: Podcast[] } = JSON.parse(cachedData)
-
-      if (!isExpired(timestamp)) {
-        const podcast = podcasts.find(
-          (podcast: Podcast) => podcast.id === podcastId,
-        )
-        if (podcast) {
-          setPodcast(podcast)
-        } else {
-          console.log('Podcast not found')
-          navigate('/')
-        }
-      } else {
-        console.log('Cached data expired')
-        localStorage.removeItem('podcastsCache')
+    const loadPodcast = async () => {
+      let podcast = getPodcast(podcastId!)
+      if (!podcast) {
+        await fetchPodcasts()
+        podcast = getPodcast(podcastId!)
+      }
+      if (!podcast) {
+        console.log('Podcast not found')
         navigate('/')
       }
-    } else {
-      console.log('No cached podcasts data found')
-      navigate('/')
     }
-  }, [podcastId])
+    loadPodcast()
+  }, [podcastId, navigate, getPodcast, fetchPodcasts])
+
+  const podcast = getPodcast(podcastId!)
+
+  if (!podcast) return null
 
   return (
     <div className="layout-detail">

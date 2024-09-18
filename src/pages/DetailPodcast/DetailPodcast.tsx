@@ -1,24 +1,23 @@
-import { useEffect, useState } from 'react'
-import { useLoading } from '../../context'
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { getEpisodes } from '../../api'
-import { Episode } from '../../types'
+import { useLoading } from '../../store/loadingStore'
+import usePodcastStore from '../../store/podcastStore'
+import { List } from '../../components'
 
 import './DetailPodcast.css'
-import { List } from '../../components'
 
 export const DetailPodcast = () => {
   const { setIsLoading } = useLoading()
   const { podcastId } = useParams<{ podcastId: string }>()
-  const [episodes, setEpisodes] = useState<Episode[]>([])
+  const { getEpisodes, fetchEpisodes, episodes } = usePodcastStore()
 
   const getDataEpisodes = async () => {
     setIsLoading(true)
-
     try {
       if (podcastId) {
-        const data = await getEpisodes(Number(podcastId))
-        if (data) setEpisodes(data)
+        if (!episodes[Number(podcastId)]) {
+          await fetchEpisodes(Number(podcastId))
+        }
       } else {
         console.log('podcastId is not defined')
       }
@@ -33,11 +32,13 @@ export const DetailPodcast = () => {
     getDataEpisodes()
   }, [podcastId])
 
+  const podcastEpisodes = podcastId ? getEpisodes(Number(podcastId)) : []
+
   return (
     <div className="wrapperDetail">
-      <div className="count">Episodes: {episodes.length}</div>
+      <div className="count">Episodes: {podcastEpisodes.length}</div>
       <div className="wrapperList">
-        <List episodes={episodes} podcastId={podcastId || ''} />
+        <List episodes={podcastEpisodes} podcastId={podcastId || ''} />
       </div>
     </div>
   )

@@ -1,49 +1,36 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { Episode } from '../../types'
-import { useLoading } from '../../context'
-import { isExpired } from '../../utils'
+import { useEffect } from 'react'
+import { useLoading } from '../../store/loadingStore'
+import usePodcastStore from '../../store/podcastStore'
 
 import './EpisodeDetail.css'
 
 export const EpisodeDetail = () => {
   const { setIsLoading } = useLoading()
-  const [episode, setEpisode] = useState<Episode | null>(null)
   const { podcastId, episodeId } = useParams<{
     podcastId: string
     episodeId: string
   }>()
+  const { getEpisodes, fetchEpisodes } = usePodcastStore()
 
   useEffect(() => {
-    setIsLoading(true)
-
-    const cachedData = localStorage.getItem(`episode_${podcastId}`)
-    if (cachedData) {
-      const {
-        timestamp,
-        episodes,
-      }: { timestamp: number; episodes: Episode[] } = JSON.parse(cachedData)
-
-      if (!isExpired(timestamp)) {
-        const episodeData = episodes.find(
-          episode => episode.id === parseInt(episodeId || ''),
-        )
-        if (episodeData) {
-          setEpisode(episodeData)
-        } else {
-          console.log('Episode not found')
-        }
-      } else {
-        console.log('Cached episode data expired')
-        localStorage.removeItem(`episode_${podcastId}`)
+    const loadEpisode = async () => {
+      setIsLoading(true)
+      let episodes = getEpisodes(parseInt(podcastId!))
+      if (episodes.length === 0) {
+        await fetchEpisodes(parseInt(podcastId!))
+        episodes = getEpisodes(parseInt(podcastId!))
       }
-    } else {
-      console.log('No cached episodes found')
+      setIsLoading(false)
     }
+    loadEpisode()
+  }, [podcastId, episodeId, setIsLoading, getEpisodes, fetchEpisodes])
 
-    setIsLoading(false)
-  }, [episodeId, podcastId, setIsLoading])
+  const episode = getEpisodes(parseInt(podcastId!)).find(
+    ep => ep.id === parseInt(episodeId!),
+  )
 
+  if (!episode) return null
   return (
     <div className="wrapperInfo">
       <h2>{episode?.name}</h2>

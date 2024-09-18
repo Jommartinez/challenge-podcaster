@@ -7,8 +7,8 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom'
-import { isExpired } from '../../utils'
 import { DetailLayout } from '../../layout'
+import usePodcastStore from '../../store/podcastStore'
 
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
@@ -19,36 +19,34 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-vi.mock('../../utils', () => ({
-  isExpired: vi.fn(),
+vi.mock('../../store/podcastStore', () => ({
+  default: vi.fn(),
 }))
 
 describe('DetailLayout', () => {
   const mockNavigate = vi.fn()
+  const mockGetPodcast = vi.fn()
+  const mockFetchPodcasts = vi.fn()
 
   beforeEach(() => {
+    vi.useFakeTimers()
     vi.clearAllMocks()
     vi.mocked(useNavigate).mockReturnValue(mockNavigate)
     vi.mocked(useParams).mockReturnValue({ podcastId: '1' })
+    vi.mocked(usePodcastStore).mockReturnValue({
+      getPodcast: mockGetPodcast,
+      fetchPodcasts: mockFetchPodcasts,
+    } as any)
   })
 
   test('renders DetailLayout correctly', () => {
-    localStorage.setItem(
-      'podcastsCache',
-      JSON.stringify({
-        timestamp: Date.now(),
-        podcasts: [
-          {
-            id: '1',
-            title: 'Test Podcast',
-            author: 'Test Author',
-            description: 'Test Description',
-            image: 'test-image.jpg',
-          },
-        ],
-      }),
-    )
-    vi.mocked(isExpired).mockReturnValue(false)
+    mockGetPodcast.mockReturnValue({
+      id: '1',
+      title: 'Test Podcast',
+      author: 'Test Author',
+      description: 'Test Description',
+      image: 'https://placehold.co/200',
+    })
 
     render(
       <MemoryRouter initialEntries={['/podcast/1']}>
@@ -64,15 +62,9 @@ describe('DetailLayout', () => {
     expect(screen.getByAltText('Test Podcast cover')).toBeInTheDocument()
   })
 
-  test('redirects to home if podcast not found', () => {
-    localStorage.setItem(
-      'podcastsCache',
-      JSON.stringify({
-        timestamp: Date.now(),
-        podcasts: [],
-      }),
-    )
-    vi.mocked(isExpired).mockReturnValue(false)
+  test('redirects to home if podcast not found', async () => {
+    mockGetPodcast.mockReturnValue(undefined)
+    mockFetchPodcasts.mockResolvedValue(undefined)
 
     render(
       <MemoryRouter initialEntries={['/podcast/1']}>
@@ -82,48 +74,7 @@ describe('DetailLayout', () => {
       </MemoryRouter>,
     )
 
-    expect(mockNavigate).toHaveBeenCalledWith('/')
-  })
-
-  test('redirects to home if cached data is expired', () => {
-    localStorage.setItem(
-      'podcastsCache',
-      JSON.stringify({
-        timestamp: Date.now() - 100000,
-        podcasts: [
-          {
-            id: '1',
-            title: 'Test Podcast',
-            author: 'Test Author',
-            description: 'Test Description',
-            image: 'test-image.jpg',
-          },
-        ],
-      }),
-    )
-    vi.mocked(isExpired).mockReturnValue(true)
-
-    render(
-      <MemoryRouter initialEntries={['/podcast/1']}>
-        <Routes>
-          <Route path="/podcast/:podcastId" element={<DetailLayout />} />
-        </Routes>
-      </MemoryRouter>,
-    )
-
-    expect(mockNavigate).toHaveBeenCalledWith('/')
-  })
-
-  test('redirects to home if no cached data found', () => {
-    localStorage.removeItem('podcastsCache')
-
-    render(
-      <MemoryRouter initialEntries={['/podcast/1']}>
-        <Routes>
-          <Route path="/podcast/:podcastId" element={<DetailLayout />} />
-        </Routes>
-      </MemoryRouter>,
-    )
+    await vi.runAllTimersAsync()
 
     expect(mockNavigate).toHaveBeenCalledWith('/')
   })

@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import { useLoading } from '../../context'
+import { useLoading } from '../../store/loadingStore'
 import { Header } from '../../components'
 
 import './MainLayout.css'

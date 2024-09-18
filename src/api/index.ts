@@ -1,3 +1,3 @@
 export { api } from './api'
-export { getPodcasts } from './podcasts'
-export { getEpisodes } from './episodes'
+export { fetchPodcasts } from './podcasts'
+export { fetchEpisodes } from './episodes'
